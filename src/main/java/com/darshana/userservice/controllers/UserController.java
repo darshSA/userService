@@ -1,11 +1,14 @@
 package com.darshana.userservice.controllers;
 
+import com.darshana.userservice.dtos.SetUserRolesRequestDto;
 import com.darshana.userservice.dtos.UserDto;
 import com.darshana.userservice.services.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-//@RequestMapping("/users")
+@RequestMapping("/users")
 public class UserController {
     private UserService userService;
 
@@ -13,13 +16,16 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/users")
-    public UserDto signUp(@RequestBody UserDto userDto){
-        return userService.signup(userDto);
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUserDetails(@PathVariable("id") Long id){
+        UserDto userDto = userService.getUserDetails(id);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
-    @PostMapping("/login/{email}")
-    public String login(@PathVariable("email") String email){
-        return userService.login(email);
+    @PostMapping("/{id}/roles")
+    public ResponseEntity<UserDto> setUserRoles(@PathVariable("id") Long id,
+                                                @RequestBody SetUserRolesRequestDto request){
+        UserDto userDto = userService.setUserRoles(id, request.getRoleIds());
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 }
