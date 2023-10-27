@@ -21,4 +21,6 @@ public class SpringSecurity {
     public BCryptPasswordEncoder bCryptPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
+
 }

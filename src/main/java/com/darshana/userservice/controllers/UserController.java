@@ -22,7 +22,7 @@ public class UserController {
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/roles")
+    @PostMapping("/roles/{id}")
     public ResponseEntity<UserDto> setUserRoles(@PathVariable("id") Long id,
                                                 @RequestBody SetUserRolesRequestDto request){
         UserDto userDto = userService.setUserRoles(id, request.getRoleIds());

@@ -10,10 +10,7 @@ import com.darshana.userservice.repositories.SessionRepository;
 import com.darshana.userservice.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -42,7 +39,11 @@ public class UserService {
             return null;
 
         User user = userOptional.get();
-        user.setRoles(Set.copyOf(roles));
+        Set<Role> roleList = new HashSet<>();
+        for (Role role:roles) {
+            roleList.add(role);
+        }
+        user.setRoles(roleList);
 
         User savedUser = userRepository.save(user);
         return UserDto.from(savedUser);
