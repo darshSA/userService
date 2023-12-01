@@ -3,6 +3,7 @@ package com.darshana.userservice.controllers;
 import com.darshana.userservice.dtos.*;
 import com.darshana.userservice.models.SessionStatus;
 import com.darshana.userservice.services.AuthService;
+import com.darshana.userservice.services.EmailServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,14 +12,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
     private AuthService authService;
+    private EmailServiceImpl emailService;
 
-    public AuthController(AuthService authService){
+    public AuthController(AuthService authService, EmailServiceImpl emailService) {
         this.authService = authService;
+        this.emailService = emailService;
     }
 
     @PostMapping("/signup")
     public ResponseEntity<UserDto> signUp(@RequestBody SignupRequestDto request){
         UserDto userDto = authService.signup(request.getEmail(), request.getPassword());
+        EmailDetails emailDetails = new EmailDetails();
+        emailDetails.setRecipient(userDto.getEmail());
+        emailDetails.setMsgBody("You have successfully created account");
+        emailDetails.setSubject("Welcome to UserService");
+        emailService.sendSimpleMail(emailDetails);
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
